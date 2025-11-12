@@ -100,3 +100,5 @@ On Windows, the easiest way to expose the GPU to Docker is via WSL2:
 7. Set `WHISPER_COMPUTE=cuda` and `KOKORO_DEVICE=cuda` (or leave them at `cpu` if you’d rather run without the GPU).
 
 Once Docker Desktop is using WSL2, both the STT and TTS containers share the same GPU automatically. If you hit `libcublas`/`cudnn` errors, double-check that the NVIDIA driver, WSL, and Docker Desktop versions meet NVIDIA’s requirements.
+
+> The TTS container builds on `nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04` so cuDNN libraries are present for ONNX Runtime. Make sure your Windows driver supports CUDA 12.4; otherwise set `KOKORO_DEVICE=cpu`.
