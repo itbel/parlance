@@ -86,3 +86,17 @@ Whisper and Kokoro can use NVIDIA GPUs:
 1. Install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) on the host.
 2. Set `WHISPER_COMPUTE=cuda` and `KOKORO_DEVICE=cuda` in `.env` (or leave `auto` to let each service decide).
 3. The compose file already reserves one GPU for both `stt` and `tts` via `deploy.resources`. If you're running on CPU-only hardware, comment out those sections.
+
+### Windows + WSL2 quick start
+
+On Windows, the easiest way to expose the GPU to Docker is via WSL2:
+
+1. Install the latest NVIDIA driver for Windows that advertises WSL support.
+2. Install WSL2 with an Ubuntu distribution (`wsl --install -d Ubuntu`) and reboot.
+3. Install Docker Desktop for Windows and enable “Use the WSL 2 based engine”.
+4. In Docker Desktop → Settings → Resources → WSL integration, enable your Ubuntu distro.
+5. Open the Ubuntu shell (`wsl.exe`) and run `nvidia-smi` to confirm the GPU is visible.
+6. Clone this repo inside WSL, create `.env`, and run `docker compose up --build`.
+7. Set `WHISPER_COMPUTE=cuda` and `KOKORO_DEVICE=cuda` (or leave them at `cpu` if you’d rather run without the GPU).
+
+Once Docker Desktop is using WSL2, both the STT and TTS containers share the same GPU automatically. If you hit `libcublas`/`cudnn` errors, double-check that the NVIDIA driver, WSL, and Docker Desktop versions meet NVIDIA’s requirements.
