@@ -56,8 +56,12 @@ The main variables in `.env`:
 | `TTS_ENABLED` | `true` | Toggle voice output (set `false` to disable TTS entirely). |
 | `CORS_ORIGIN` | `http://localhost:5173` | Front-end origin allowed by the API server. |
 | `VITE_API_BASE` | `http://localhost:8787` | API base embedded in the front-end during the Docker build. |
-
-The Whisper and Kokoro containers also respect `WHISPER_MODEL`, `WHISPER_COMPUTE`, `KOKORO_MODEL_ID`, `KOKORO_DEVICE`, `KOKORO_DTYPE`, and `KOKORO_VOICE` as shown in `.env.example`.
+| `WHISPER_MODEL` | `base` | Whisper model pulled inside the STT container. |
+| `WHISPER_COMPUTE` | `auto` | `auto`, `cpu`, or `cuda`. Set `cuda` if you want GPU acceleration. |
+| `KOKORO_MODEL_ID` | `onnx-community/Kokoro-82M-v1.0-ONNX` | Model loaded by the TTS container. |
+| `KOKORO_DEVICE` | `cpu` | Set to `cpu`, `webgpu`, or `cuda`. Use `cuda` when a GPU is available. |
+| `KOKORO_DTYPE` | `q8` | Precision to load (e.g., `fp32`, `fp16`, `q8`). |
+| `KOKORO_VOICE` | `af_heart` | Default voice ID. |
 
 ## Development tips
 
@@ -74,3 +78,11 @@ The repository is ready to share:
 3. Users clone the repo, provide their own Ollama + SearxNG endpoints, and run `docker compose up --build`.
 
 Because Ollama and SearxNG stay outside of this compose stack, deployments remain flexible: you can point Parlance at remote instances, hosted providers, or local daemons simply by changing the environment variables or the Settings tab inside the app.
+
+## GPU acceleration
+
+Whisper and Kokoro can use NVIDIA GPUs:
+
+1. Install the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) on the host.
+2. Set `WHISPER_COMPUTE=cuda` and `KOKORO_DEVICE=cuda` in `.env` (or leave `auto` to let each service decide).
+3. The compose file already reserves one GPU for both `stt` and `tts` via `deploy.resources`. If you're running on CPU-only hardware, comment out those sections.

@@ -39,6 +39,13 @@ services:
       - "8000:8000"
     volumes:
       - ./stt/model_cache:/root/.cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+              driver: nvidia
+              count: 1
 
   tts:
     build: ./tts
@@ -54,3 +61,10 @@ services:
       - "8600:8600"
     volumes:
       - ./tts/kokoro:/kokoro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+              driver: nvidia
+              count: 1
