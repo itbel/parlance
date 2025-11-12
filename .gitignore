@@ -1,0 +1,16 @@
+# Node artifacts
+**/node_modules/
+**/dist/
+
+# Local data caches
+server/data/
+stt/model_cache/
+tts/kokoro/
+
+# Environment files
+.env
+*.env.local
+
+# OS junk
+.DS_Store
+Thumbs.db

@@ -1,0 +1,16 @@
+{
+  "settings": {
+    "ollamaUrl": "https://ollama.terra.lan",
+    "systemPrompt": "You are Parlance, a friendly real-time voice assistant. Answer in short, conversational sentences that sound natural when spoken."
+  },
+  "sessions": [
+    {
+      "id": "44a51e0d-2088-4959-83a8-8243fd3d0f69",
+      "title": "Test",
+      "createdAt": "2025-11-09T22:02:14.186Z",
+      "updatedAt": "2025-11-09T22:02:14.186Z"
+    }
+  ],
+  "messages": [],
+  "memory": []
+}

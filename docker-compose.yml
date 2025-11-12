@@ -1,0 +1,56 @@
+services:
+  server:
+    build: ./server
+    container_name: parlance-server
+    restart: unless-stopped
+    environment:
+      - STT_URL=${STT_URL:-http://stt:8000/transcribe}
+      - TTS_URL=${TTS_URL:-http://tts:8600/speak}
+      - TTS_ENABLED=${TTS_ENABLED:-true}
+      - DEFAULT_OLLAMA_URL=${DEFAULT_OLLAMA_URL:-http://localhost:11434}
+      - DEFAULT_SEARX_URL=${DEFAULT_SEARX_URL:-http://localhost:8080}
+      - DEFAULT_SEARX_ALLOW_INSECURE=${DEFAULT_SEARX_ALLOW_INSECURE:-false}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:5173}
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+    ports:
+      - "8787:8787"
+    depends_on: [stt, tts]
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_BASE: ${VITE_API_BASE:-http://localhost:8787}
+    container_name: parlance-web
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "5173:80"
+
+  stt:
+    build: ./stt
+    container_name: parlance-stt
+    restart: unless-stopped
+    environment:
+      - WHISPER_MODEL=${WHISPER_MODEL:-base}        # tiny|base|small|medium|large-v3
+      - WHISPER_COMPUTE=${WHISPER_COMPUTE:-auto}    # auto|cpu|cuda (use cuda only if you pass a GPU)
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./stt/model_cache:/root/.cache
+
+  tts:
+    build: ./tts
+    container_name: parlance-tts
+    restart: unless-stopped
+    environment:
+      - KOKORO_MODEL_ID=${KOKORO_MODEL_ID:-onnx-community/Kokoro-82M-v1.0-ONNX}
+      - KOKORO_DEVICE=${KOKORO_DEVICE:-cpu}
+      - KOKORO_DTYPE=${KOKORO_DTYPE:-q8}
+      - KOKORO_VOICE=${KOKORO_VOICE:-af_heart}
+      - TRANSFORMERS_CACHE=/kokoro/cache
+    ports:
+      - "8600:8600"
+    volumes:
+      - ./tts/kokoro:/kokoro
