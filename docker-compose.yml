@@ -39,13 +39,6 @@ services:
       - "8000:8000"
     volumes:
       - ./stt/model_cache:/root/.cache
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-              driver: nvidia
-              count: 1
 
   tts:
     build: ./tts

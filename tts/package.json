@@ -10,7 +10,7 @@
   "dependencies": {
     "express": "^4.19.2",
     "kokoro-js": "^1.2.1",
-    "onnxruntime-node": "^1.20.0"
+    "onnxruntime-node-gpu": "^1.14.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
